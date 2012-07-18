@@ -30,9 +30,10 @@ class Sample
 
     Sample(string name);
     int compute(); //Compute xray properties
+    int dilute(string compound) //Dilute sample using a specified compound
     int rename(string name); //Change sample name
     int write_screen(); //Write sample data to screen
-    int write_file(); //Write sample data to file
+    int write_file(string file_name); //Write sample data to file
 };
 
 int parse_input(string input)
