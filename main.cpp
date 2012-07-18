@@ -53,6 +53,7 @@ string Sample::get_name()
     return name;
 }
 
+//Explodes a string
 void string_explode(string str, string separator, vector<string>* results){
     unsigned int found;
     found = str.find_first_of(separator);
@@ -93,6 +94,7 @@ int parse_input(string mode = "none")
     {
         if (filtered_input[1] == "new")
         {
+            //Check for one-word name
             if (filtered_input.size() == 3)
             {
                 samples.push_back(Sample(filtered_input[2]));
@@ -110,11 +112,12 @@ int parse_input(string mode = "none")
     //List samples
     else if (filtered_input[0] == "list")
     {
-
+        //Make sure 'samples' isn't empty
         if (samples.size() != 0)
         {
             cout << "List of samples:" << endl;
 
+            //List samples
             for (unsigned int i = 0; i < samples.size(); i++)
             {
                 cout << (i+1) << ". " << samples[i].get_name() << endl;
