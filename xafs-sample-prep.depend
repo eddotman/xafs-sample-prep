@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1342622908 source:c:\users\eddie\documents\programming\xafs-sample-prep\main.cpp
+	<iostream>
+	<vector>
+	<string>
+
