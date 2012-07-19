@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "mucal.h"
 
 using namespace std;
 
@@ -25,6 +26,7 @@ class Sample
     float density; //Bulk density of material (g/cm^3)
 
     //Calculated
+    float energy;
     float mu;
     float absorption_length;
     float volume;
@@ -41,6 +43,8 @@ class Sample
     int write_file(string file_name); //Write sample data to file
 
     string get_name();
+
+    int set_energy(float inp_energy);
 };
 
 Sample::Sample(string sample_name)
@@ -51,6 +55,12 @@ Sample::Sample(string sample_name)
 string Sample::get_name()
 {
     return name;
+}
+
+int setEnergy(string inp_energy)
+{
+    energy = inp_energy;
+    return NO_ERR;
 }
 
 //Explodes a string
@@ -74,11 +84,13 @@ vector < Sample > samples;
 
 int parse_input(string mode = "none")
 {
+    int err = NO_ERR;
+
     string user_input;
     vector < string > filtered_input;
 
     cout << "Please enter a command:" << endl;
-    cout << ">>>";
+    cout << ">>";
     getline(cin, user_input);
     cout << endl;
 
@@ -87,11 +99,12 @@ int parse_input(string mode = "none")
     //Quit Program
     if (filtered_input[0] == "quit")
     {
-        return EXIT_CMD;
+        err = EXIT_CMD;
     }
     //Sample commands
     else if (filtered_input[0] == "sample")
     {
+        //Create a new sample
         if (filtered_input[1] == "new")
         {
             //Check for one-word name
@@ -103,6 +116,16 @@ int parse_input(string mode = "none")
             {
                 cout << "A one-word sample name is required. Please re-input." << endl;
             }
+        }
+        //Compute quantities for a sample
+        else if (filtered_input[1] == "compute")
+        {
+
+        }
+        //Setup sample energy for xray calcs
+        else if (filtered_input[1] == "energy")
+        {
+
         }
         else
         {
@@ -135,7 +158,7 @@ int parse_input(string mode = "none")
     }
 
     cout << endl;
-    return NO_ERR;
+    return err;
 }
 
 int main()
