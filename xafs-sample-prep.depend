@@ -23,3 +23,28 @@
 	<math.h>
 	"mucal.h"
 
+1342795528 source:/home/eddie/Documents/Programming/xafs-sample-prep/mucal.c
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	"mucal.h"
+
+1342795528 /home/eddie/Documents/Programming/xafs-sample-prep/mucal.h
+
+1342798786 source:/home/eddie/Documents/Programming/xafs-sample-prep/main.cpp
+	<iostream>
+	<vector>
+	<cstdlib>
+	<string>
+	<iomanip>
+	<cstring>
+	"mucal.c"
+
+1342795528 /home/eddie/Documents/Programming/xafs-sample-prep/mucal.c
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	"mucal.h"
+
