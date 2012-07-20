@@ -4,8 +4,11 @@
 
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 #include <string>
-#include "mucal.h"
+#include <iomanip>
+#include <cstring>
+#include "mucal.c"
 
 using namespace std;
 
@@ -21,7 +24,6 @@ class Sample
     //User Defined
     string name; //Name of sample
     vector < string > elements; //List of elements in sample (element symbols)
-    string formula; //Optional chemical formula
     vector < float > mass_percents; //Percent of each element by weight
     float density; //Bulk density of material (g/cm^3)
 
@@ -36,15 +38,20 @@ class Sample
     public:
 
     Sample(string name);
-    int compute(); //Compute xray properties
+    int compute(); //Compute xray properties at a given energy
     int dilute(string compound); //Dilute sample using a specified compound
     int rename(string sample_name); //Change sample name
     int write_screen(); //Write sample data to screen
     int write_file(string file_name); //Write sample data to file
 
     string get_name();
+    int get_num_elements();
 
     int set_energy(float inp_energy);
+    int set_density(float inp_density);
+    int set_elements (vector < string > inp_elements);
+    int set_num_elements(int num);
+    int set_mass_percents (vector < float > inp_mass_percents);
 };
 
 Sample::Sample(string sample_name)
@@ -57,9 +64,89 @@ string Sample::get_name()
     return name;
 }
 
-int setEnergy(string inp_energy)
+int Sample::get_num_elements()
+{
+    return elements.size();
+}
+
+int Sample::set_energy(float inp_energy)
 {
     energy = inp_energy;
+    return NO_ERR;
+}
+
+int Sample::set_density(float inp_density)
+{
+    density = inp_density;
+    return NO_ERR;
+}
+
+int Sample::set_elements (vector < string > inp_elements)
+{
+    elements = inp_elements;
+    return NO_ERR;
+}
+
+int Sample::set_num_elements(int num)
+{
+    elements.resize(num);
+    return NO_ERR;
+}
+
+int Sample::set_mass_percents (vector < float > inp_mass_percents)
+{
+    mass_percents = inp_mass_percents;
+    return NO_ERR;
+}
+
+int Sample::write_screen()
+{
+    cout << endl << "------------------------------------" << endl << endl;
+    cout << "Sample Name: " << name << endl << endl;
+    cout << "Sample Composition:" << endl << endl;
+
+    for (int i = 0; i < elements.size(); i++)
+    {
+        cout << setprecision(5) << mass_percents[i] << "  " << elements[i] << endl;
+    }
+
+    cout << endl;
+
+    cout << "Absorption Coefficient (1/cm): " << mu << endl;
+    cout << "Absorption Length (cm): " << absorption_length << endl;
+    cout << endl << "------------------------------------" << endl;
+    cout << endl;
+
+    return NO_ERR;
+}
+
+int Sample::compute()
+{
+    int err; //Used for mucal
+    int print_flag = 1;
+
+    float accumMu = 0; //accumulates sum part of mu value through multiplying
+
+    //Return variables for mucal
+    double retEnergy[9];
+    double xsec[11];
+    double fl_yield[4];
+    char err_msg[100];
+    char elemName[2];
+
+    for (int i = 0; i < elements.size();i++)
+    {
+        strcpy(elemName, elements[i].c_str());
+        err = mucal(elemName, 0, energy, 'c', print_flag, retEnergy, xsec, fl_yield, err_msg);
+
+        accumMu += (mass_percents[i]*xsec[3]);
+    }
+
+    //multiply in density
+    mu = accumMu * density;
+
+    absorption_length = (1 / mu) * 10000; //Absorption length in microns
+
     return NO_ERR;
 }
 
@@ -89,12 +176,21 @@ int parse_input(string mode = "none")
     string user_input;
     vector < string > filtered_input;
 
-    cout << "Please enter a command:" << endl;
-    cout << ">>";
-    getline(cin, user_input);
-    cout << endl;
 
-    string_explode(user_input, " ", &filtered_input); //Explode the string by each word
+    if (mode == "none")
+    {
+        cout << "Please enter a command:" << endl;
+        cout << ">>";
+        getline(cin, user_input);
+        cout << endl;
+
+        string_explode(user_input, " ", &filtered_input); //Explode the string by each word
+    }
+    else if (mode == "list")
+    {
+        filtered_input.resize(1);
+        filtered_input[0] = "list";
+    }
 
     //Quit Program
     if (filtered_input[0] == "quit")
@@ -120,12 +216,109 @@ int parse_input(string mode = "none")
         //Compute quantities for a sample
         else if (filtered_input[1] == "compute")
         {
+            //Show samples
+            err = parse_input("list");
+            int sample_ID;
+
+            //Get the sample ID
+            do
+            {
+                cout << "Enter the ID of the sample you wish to compute: ";
+                getline(cin, user_input);
+
+            }while(!isdigit(*user_input.c_str()));
+
+
+            sample_ID = atoi(user_input.c_str());
+
+            //Get the energy
+            do
+            {
+                cout << "Enter the desired photon energy (in keV): ";
+                getline(cin, user_input);
+
+            }while(!isdigit(*user_input.c_str()));
+
+            err = samples[sample_ID].set_energy(atof(user_input.c_str()));
+
+            err = samples[sample_ID].compute();
+        }
+        //Setup the sample
+        else if (filtered_input[1] == "setup")
+        {
+            //Show samples
+            err = parse_input("list");
+            int sample_ID;
+            vector < string > inp_elements;
+            vector < float > inp_mass_percents;
+
+            //Get the sample ID
+            do
+            {
+                cout << "Enter the ID of the sample you wish to setup: ";
+                getline(cin, user_input);
+
+            }while(!isdigit(*user_input.c_str()));
+
+
+            sample_ID = atoi(user_input.c_str());
+
+            //Get the density
+            do
+            {
+                cout << "Enter the bulk density (in g/cm^3): ";
+                getline(cin, user_input);
+
+            }while(!isdigit(*user_input.c_str()));
+
+            samples[sample_ID].set_density(atof(user_input.c_str()));
+
+            //Get the elements
+            do
+            {
+                cout << "Enter the number of elements in the compound: ";
+                getline(cin, user_input);
+
+            }while(!isdigit(*user_input.c_str()));
+
+            samples[sample_ID].set_num_elements(atoi(user_input.c_str()));
+
+            for (int i = 0; i < samples[sample_ID].get_num_elements(); i++)
+            {
+                cout << "Please enter the symbol for element #" << i+1 << ": ";
+                getline(cin, user_input);
+
+                inp_elements.push_back(user_input);
+
+                cout << "Please enter the mass percentage for element #" << i+1 << " (fraction between 0-1): ";
+                getline(cin, user_input);
+
+                inp_mass_percents.push_back(atof(user_input.c_str()));
+            }
+
+            err = samples[sample_ID].set_elements(inp_elements);
+            err = samples[sample_ID].set_mass_percents(inp_mass_percents);
 
         }
-        //Setup sample energy for xray calcs
-        else if (filtered_input[1] == "energy")
+        //Write sample info to screen
+        else if (filtered_input[1] == "write")
         {
+            //Show samples
+            err = parse_input("list");
+            int sample_ID;
 
+            //Get the sample ID
+            do
+            {
+                cout << "Enter the ID of the sample you wish to write to screen: ";
+                getline(cin, user_input);
+
+            }while(!isdigit(*user_input.c_str()));
+
+
+            sample_ID = atoi(user_input.c_str());
+
+            err = samples[sample_ID].write_screen();
         }
         else
         {
@@ -143,7 +336,7 @@ int parse_input(string mode = "none")
             //List samples
             for (unsigned int i = 0; i < samples.size(); i++)
             {
-                cout << (i+1) << ". " << samples[i].get_name() << endl;
+                cout << i << ". " << samples[i].get_name() << endl;
             }
         }
         else
@@ -173,7 +366,7 @@ int main()
     //Input loop
     do
     {
-        err = parse_input();
+        err = parse_input("none");
 
     }while(err != EXIT_CMD);
 

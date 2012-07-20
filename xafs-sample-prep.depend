@@ -1,6 +1,25 @@
 # depslib dependency file v1.0
-1342622908 source:c:\users\eddie\documents\programming\xafs-sample-prep\main.cpp
+1342741940 source:c:\users\eddie\documents\programming\xafs-sample-prep\main.cpp
 	<iostream>
 	<vector>
+	<cstdlib>
 	<string>
+	<cstring>
+	"mucal.c"
+
+1342631962 source:c:\users\eddie\documents\programming\xafs-sample-prep\mucal.c
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	"mucal.h"
+
+1342094281 c:\users\eddie\documents\programming\xafs-sample-prep\mucal.h
+
+1342631962 c:\users\eddie\documents\programming\xafs-sample-prep\mucal.c
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	"mucal.h"
 
