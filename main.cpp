@@ -49,6 +49,7 @@ class Sample
     string get_name();
     int get_num_elements();
 
+    int set_name(string new_name);
     int set_energy(float inp_energy);
     int set_density(float inp_density);
     int set_elements (vector < string > inp_elements);
@@ -94,6 +95,12 @@ int Sample::set_num_elements(int num)
     elements.resize(num);
     mass_percents.resize(num);
     masses.resize(num);
+    return NO_ERR;
+}
+
+int Sample::set_name(string new_name)
+{
+    name = new_name;
     return NO_ERR;
 }
 
@@ -233,6 +240,7 @@ int parse_input(string mode = "none")
         cout << "List of available commands:" << endl << endl;
         cout << "list                  ---List all samples" << endl;
         cout << "sample new [name]     ---Creates a new sample" << endl;
+        cout << "sample rename         ---Renames a sample" << endl;
         cout << "sample setup          ---Setup sample properties" << endl;
         cout << "sample compute        ---Compute xray data for sample" << endl;
         cout << "sample write          ---Write sample data to screen" << endl;
@@ -251,10 +259,45 @@ int parse_input(string mode = "none")
             if (filtered_input.size() == 3)
             {
                 samples.push_back(Sample(filtered_input[2]));
+                cout << "New sample created." << endl;
             }
             else
             {
                 cout << "A one-word sample name is required. Please re-input." << endl;
+            }
+        }
+        //Rename a sample
+        else if (filtered_input[1] == "rename")
+        {
+            err = parse_input("list");
+
+            if (err != NO_SAMPLES)
+            {
+                int sample_ID;
+
+                //Get the sample ID
+                do
+                {
+                    cout << "Enter the ID of the sample you wish to compute: ";
+                    getline(cin, user_input);
+
+                }while(!isdigit(*user_input.c_str()));
+
+                //Get the new name
+                vector < string > new_name;
+                do
+                {
+                    cout << "Enter the new (one-word) name for the sample: ";
+                    getline(cin, user_input);
+
+                    string_explode(user_input, " ", &new_name);
+
+                }while(!new_name.size() == 1);
+
+
+                sample_ID = atoi(user_input.c_str());
+
+                err = samples[sample_ID].set_name(new_name[0]);
             }
         }
         //Compute quantities for a sample
@@ -350,6 +393,8 @@ int parse_input(string mode = "none")
 
                 err = samples[sample_ID].set_elements(inp_elements);
                 err = samples[sample_ID].set_mass_percents(inp_mass_percents);
+
+                cout << endl << "Sample has been successfully set up." << endl;
             }
 
 
