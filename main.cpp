@@ -1,6 +1,6 @@
 //XAFS Sample Preparation Calculation Assistant
 //Created by Edward Kim - ekim01@uoguelph.ca
-//July 2012
+//August 2012
 
 #include <iostream>
 #include <vector>
