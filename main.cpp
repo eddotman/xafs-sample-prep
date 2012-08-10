@@ -3,6 +3,7 @@
 //August 2012
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <cstdlib>
 #include <string>
@@ -15,8 +16,8 @@ using namespace std;
 //Error codes
 const int NO_ERR = 0;
 const int EXIT_CMD = -1;
-const int BAD_INPUT = 1;
-const int NO_SAMPLES = 2;
+const int BAD_INPUT = -2;
+const int NO_SAMPLES = -3;
 
 class Sample
 {
@@ -142,6 +143,46 @@ int Sample::write_screen()
     return NO_ERR;
 }
 
+int Sample::write_file(string file_name)
+{
+    ofstream file;
+
+    file_name = "samples/" + file_name + ".txt";
+
+    file.open(file_name.c_str());
+
+    file << endl << "------------------------------------" << endl << endl;
+    file << "Sample Name: " << name << endl << endl;
+    file << "Sample Composition:" << endl << endl;
+
+    for (int i = 0; i < elements.size(); i++)
+    {
+        file << setprecision(5) << mass_percents[i] << "  " << elements[i] << endl;
+    }
+
+    file << endl;
+
+    file << "Absorption Coefficient (1/cm): " << mu << endl;
+    file << "Absorption Length (cm): " << absorption_length << endl << endl;
+    file << "Pellet Density (g/cm^3): " << density << endl;
+    file << "Pellet Radius (cm): " << radius << endl;
+    file << "Pellet Volume (cm^3): " << volume << endl;
+    file << "Pellet Mass (g): " << mass << endl;
+    file << endl << "Pellet Masses by Element (g): " << endl << endl;
+
+    for (int i = 0; i < elements.size(); i++)
+    {
+        file << setprecision(5) << masses[i] << "  " << elements[i] << endl;
+    }
+
+    file << endl << "------------------------------------" << endl;
+    file << endl;
+
+    file.close();
+
+    return NO_ERR;
+}
+
 int Sample::compute()
 {
     int err; //Used for mucal
@@ -224,8 +265,9 @@ int parse_input(string mode = "none")
     }
     else if (mode == "list")
     {
-        filtered_input.resize(1);
+        filtered_input.resize(2);
         filtered_input[0] = "list";
+        filtered_input[1] = "ID";
     }
 
     //Quit Program
@@ -243,7 +285,7 @@ int parse_input(string mode = "none")
         cout << "sample rename         ---Renames a sample" << endl;
         cout << "sample setup          ---Setup sample properties" << endl;
         cout << "sample compute        ---Compute xray data for sample" << endl;
-        cout << "sample write          ---Write sample data to screen" << endl;
+        cout << "sample write          ---Write sample data to screen and file" << endl;
         cout << "quit                  ---Quit program" << endl;
 
     }
@@ -269,20 +311,10 @@ int parse_input(string mode = "none")
         //Rename a sample
         else if (filtered_input[1] == "rename")
         {
-            err = parse_input("list");
+            int sample_ID = parse_input("list");
 
-            if (err != NO_SAMPLES)
+            if (sample_ID != NO_SAMPLES)
             {
-                int sample_ID;
-
-                //Get the sample ID
-                do
-                {
-                    cout << "Enter the ID of the sample you wish to compute: ";
-                    getline(cin, user_input);
-
-                }while(!isdigit(*user_input.c_str()));
-
                 //Get the new name
                 vector < string > new_name;
                 do
@@ -294,7 +326,6 @@ int parse_input(string mode = "none")
 
                 }while(!new_name.size() == 1);
 
-
                 sample_ID = atoi(user_input.c_str());
 
                 err = samples[sample_ID].set_name(new_name[0]);
@@ -304,23 +335,10 @@ int parse_input(string mode = "none")
         else if (filtered_input[1] == "compute")
         {
             //Show samples
-            err = parse_input("list");
+            int sample_ID = parse_input("list");
 
-            if (err != NO_SAMPLES)
+            if (sample_ID != NO_SAMPLES)
             {
-                int sample_ID;
-
-                //Get the sample ID
-                do
-                {
-                    cout << "Enter the ID of the sample you wish to compute: ";
-                    getline(cin, user_input);
-
-                }while(!isdigit(*user_input.c_str()));
-
-
-                sample_ID = atoi(user_input.c_str());
-
                 //Get the energy
                 do
                 {
@@ -339,25 +357,10 @@ int parse_input(string mode = "none")
         else if (filtered_input[1] == "setup")
         {
             //Show samples
-            err = parse_input("list");
+            int sample_ID = parse_input("list");
 
-            if (err != NO_SAMPLES)
+            if (sample_ID != NO_SAMPLES)
             {
-                int sample_ID;
-                vector < string > inp_elements;
-                vector < float > inp_mass_percents;
-
-                //Get the sample ID
-                do
-                {
-                    cout << "Enter the ID of the sample you wish to setup: ";
-                    getline(cin, user_input);
-
-                }while(!isdigit(*user_input.c_str()));
-
-
-                sample_ID = atoi(user_input.c_str());
-
                 //Get the density
                 do
                 {
@@ -377,6 +380,9 @@ int parse_input(string mode = "none")
                 }while(!isdigit(*user_input.c_str()));
 
                 samples[sample_ID].set_num_elements(atoi(user_input.c_str()));
+
+                vector < string > inp_elements;
+                vector < float > inp_mass_percents;
 
                 for (int i = 0; i < samples[sample_ID].get_num_elements(); i++)
                 {
@@ -403,26 +409,15 @@ int parse_input(string mode = "none")
         else if (filtered_input[1] == "write")
         {
             //Show samples
-            err = parse_input("list");
+            int sample_ID = parse_input("list");
 
-            if (err != NO_SAMPLES)
+            if (sample_ID != NO_SAMPLES)
             {
-                int sample_ID;
-
-                //Get the sample ID
-                do
-                {
-                    cout << "Enter the ID of the sample you wish to write to screen: ";
-                    getline(cin, user_input);
-
-                }while(!isdigit(*user_input.c_str()));
-
-
-                sample_ID = atoi(user_input.c_str());
-
                 err = samples[sample_ID].write_screen();
-            }
+                err = samples[sample_ID].write_file(samples[sample_ID].get_name());
 
+                cout << "Sample has been saved to " << samples[sample_ID].get_name() << ".txt." << endl;
+            }
         }
         else
         {
@@ -442,6 +437,27 @@ int parse_input(string mode = "none")
             for (unsigned int i = 0; i < samples.size(); i++)
             {
                 cout << i << ". " << samples[i].get_name() << endl;
+            }
+
+            //Get ID if requested
+            if (filtered_input[1] == "ID")
+            {
+                int sample_ID = NO_SAMPLES;
+
+                //Get the sample ID
+                do
+                {
+                    cout << "Enter the ID of the sample you wish to write to screen: ";
+                    getline(cin, user_input);
+
+                    if (isdigit(*user_input.c_str()))
+                    {
+                        sample_ID = atoi(user_input.c_str());
+                    }
+
+                }while(!(sample_ID >= 0 && sample_ID < samples.size()));
+
+                return sample_ID;
             }
         }
         else
