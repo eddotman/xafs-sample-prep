@@ -46,6 +46,7 @@ class Sample
     int rename(string sample_name); //Change sample name
     int write_screen(); //Write sample data to screen
     int write_file(string file_name); //Write sample data to file
+    int compute_dilution(); //Computes BN dilution of a sample and resulting effect on absorption length
 
     string get_name();
     int get_num_elements();
@@ -180,6 +181,11 @@ int Sample::write_file(string file_name)
 
     file.close();
 
+    return NO_ERR;
+}
+
+int Sample::compute_dilution()
+{
     return NO_ERR;
 }
 
