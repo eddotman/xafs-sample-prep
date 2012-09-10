@@ -3,6 +3,8 @@
 //August 2012
 
 #include <iostream>
+#include <algorithm>
+#include <sstream>
 #include <fstream>
 #include <vector>
 #include <cstdlib>
@@ -46,7 +48,7 @@ class Sample
     int rename(string sample_name); //Change sample name
     int write_screen(); //Write sample data to screen
     int write_file(string file_name); //Write sample data to file
-    int compute_dilution(); //Computes BN dilution of a sample and resulting effect on absorption length
+    int compute_dilution(float percent); //Computes BN dilution of a sample and resulting effect on absorption length
 
     string get_name();
     int get_num_elements();
@@ -184,8 +186,47 @@ int Sample::write_file(string file_name)
     return NO_ERR;
 }
 
-int Sample::compute_dilution()
+int Sample::compute_dilution(float percent)
 {
+    int b_index;
+    int n_index;
+
+    //Search if B or N is already in sample and assign index appropriately
+    if (find(elements.begin(), elements.end(), "B") != elements.end())
+    {
+        b_index = distance(elements.begin(), find(elements.begin(), elements.end(), "B"));
+    }
+    else
+    {
+        elements.push_back("B");
+        mass_percents.push_back(0);
+        b_index = elements.size() - 1;
+    }
+
+    if (find(elements.begin(), elements.end(), "N") != elements.end())
+    {
+        n_index = distance(elements.begin(), find(elements.begin(), elements.end(), "N"));
+    }
+    else
+    {
+        elements.push_back("N");
+        mass_percents.push_back(0);
+        n_index = elements.size() - 1;
+    }
+
+    //Reduce percents of all other elements
+    for (int i = 0; i < elements.size(); i++)
+    {
+        if (i != b_index && i != n_index)
+        {
+            mass_percents[i] *= 1 - percent;
+        }
+    }
+
+    //set B and N mass percents
+    mass_percents[b_index] = 0.436*percent;
+    mass_percents[n_index] = 0.564*percent;
+
     return NO_ERR;
 }
 
@@ -356,8 +397,42 @@ int parse_input(string mode = "none")
                 err = samples[sample_ID].set_energy(atof(user_input.c_str()));
 
                 err = samples[sample_ID].compute();
+
+                cout << "Computation successful." << endl;
             }
 
+        }
+        //Compute sample dilution
+        else if (filtered_input[1] == "dilute")
+        {
+             //Show samples
+            int sample_ID = parse_input("list");
+
+            if (sample_ID != NO_SAMPLES)
+            {
+                //Make a copy for dilution
+                Sample diluted_sample = samples[sample_ID];
+
+                if (filtered_input.size() > 2)
+                {
+                    float dilution_percent = atof(filtered_input[2].c_str());
+
+                    diluted_sample.compute_dilution(dilution_percent);
+
+                    stringstream new_name;
+                    new_name << diluted_sample.get_name() << "_%_" << dilution_percent;
+
+                    diluted_sample.set_name(new_name.str());
+
+                    samples.push_back(diluted_sample);
+
+                    cout << "Dilution successful." << endl;
+                }
+                else
+                {
+                    cout << "Enter a dilution percentage between 0-1." << endl;
+                }
+            }
         }
         //Setup the sample
         else if (filtered_input[1] == "setup")
@@ -453,7 +528,7 @@ int parse_input(string mode = "none")
                 //Get the sample ID
                 do
                 {
-                    cout << "Enter the ID of the sample you wish to write to screen: ";
+                    cout << "Enter the ID of the sample you wish to select: ";
                     getline(cin, user_input);
 
                     if (isdigit(*user_input.c_str()))

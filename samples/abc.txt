@@ -1,0 +1,25 @@
+
+------------------------------------
+
+Sample Name: abc
+
+Sample Composition:
+
+0.4  As
+0.6  Fe
+
+Absorption Coefficient (1/cm): 118.41
+Absorption Length (cm): 84.451
+
+Pellet Density (g/cm^3): 1
+Pellet Radius (cm): 0.65
+Pellet Volume (cm^3): 0.011204
+Pellet Mass (g): 0.011204
+
+Pellet Masses by Element (g): 
+
+0.0044815  As
+0.0067222  Fe
+
+------------------------------------
+
