@@ -1,0 +1,25 @@
+
+------------------------------------
+
+Sample Name: xyz
+
+Sample Composition:
+
+0.112  H
+0.888  O
+
+Absorption Coefficient (1/cm): 82.718
+Absorption Length (cm): 120.89
+
+Pellet Density (g/cm^3): 1
+Pellet Radius (cm): 0.65
+Pellet Volume (cm^3): 0.016038
+Pellet Mass (g): 0.016038
+
+Pellet Masses by Element (g): 
+
+0.0017963  H
+0.014242  O
+
+------------------------------------
+

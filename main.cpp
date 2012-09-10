@@ -200,6 +200,7 @@ int Sample::compute_dilution(float percent)
     {
         elements.push_back("B");
         mass_percents.push_back(0);
+        masses.push_back(0);
         b_index = elements.size() - 1;
     }
 
@@ -211,6 +212,7 @@ int Sample::compute_dilution(float percent)
     {
         elements.push_back("N");
         mass_percents.push_back(0);
+        masses.push_back(0);
         n_index = elements.size() - 1;
     }
 
@@ -226,6 +228,9 @@ int Sample::compute_dilution(float percent)
     //set B and N mass percents
     mass_percents[b_index] = 0.436*percent;
     mass_percents[n_index] = 0.564*percent;
+
+    //adjust new total density
+    density = density*(1 - percent) + 2.29*percent;
 
     return NO_ERR;
 }
