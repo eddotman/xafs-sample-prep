@@ -338,6 +338,7 @@ int parse_input(string mode = "none")
         cout << "sample setup          ---Setup sample properties" << endl;
         cout << "sample compute        ---Compute xray data for sample" << endl;
         cout << "sample write          ---Write sample data to screen and file" << endl;
+        cout << "sample dilute         ---Compute BN dilution for sample" << endl;
         cout << "quit                  ---Quit program" << endl;
 
     }
