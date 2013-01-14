@@ -1,0 +1,31 @@
+
+------------------------------------
+
+Sample Name: FH-Nov19_%_0.75
+
+Sample Composition:
+
+0.12  Fe
+0.0075  S
+0.1225  O
+0.327  B
+0.423  N
+
+Absorption Coefficient (1/cm): 147.58
+Absorption Length (microns): 67.758
+
+Pellet Density (g/cm^3): 2.6675
+Pellet Radius (cm): 0.65
+Pellet Volume (cm^3): 0.0089891
+Pellet Mass (g): 0.023979
+
+Pellet Masses by Element (g): 
+
+0.0028774  Fe
+0.00017984  S
+0.0029374  O
+0.007841  B
+0.010143  N
+
+------------------------------------
+

@@ -127,8 +127,9 @@ int Sample::write_screen()
 
     cout << endl;
 
+    cout << "Photon Energy (keV): " << energy << endl;
     cout << "Absorption Coefficient (1/cm): " << mu << endl;
-    cout << "Absorption Length (cm): " << absorption_length << endl << endl;
+    cout << "Absorption Length (microns): " << absorption_length << endl << endl;
     cout << "Pellet Density (g/cm^3): " << density << endl;
     cout << "Pellet Radius (cm): " << radius << endl;
     cout << "Pellet Volume (cm^3): " << volume << endl;
@@ -165,8 +166,9 @@ int Sample::write_file(string file_name)
 
     file << endl;
 
+    file << "Photon Energy (keV): " << energy << endl;
     file << "Absorption Coefficient (1/cm): " << mu << endl;
-    file << "Absorption Length (cm): " << absorption_length << endl << endl;
+    file << "Absorption Length (microns): " << absorption_length << endl << endl;
     file << "Pellet Density (g/cm^3): " << density << endl;
     file << "Pellet Radius (cm): " << radius << endl;
     file << "Pellet Volume (cm^3): " << volume << endl;

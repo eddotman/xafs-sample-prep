@@ -52,3 +52,31 @@
 	<math.h>
 	"mucal.h"
 
+1357924052 source:c:\users\eddie\documents\github\xafs-sample-prep\mucal.c
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	"mucal.h"
+
+1357924052 c:\users\eddie\documents\github\xafs-sample-prep\mucal.h
+
+1357933298 source:c:\users\eddie\documents\github\xafs-sample-prep\main.cpp
+	<iostream>
+	<algorithm>
+	<sstream>
+	<fstream>
+	<vector>
+	<cstdlib>
+	<string>
+	<iomanip>
+	<cstring>
+	"mucal.c"
+
+1357924052 c:\users\eddie\documents\github\xafs-sample-prep\mucal.c
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<math.h>
+	"mucal.h"
+

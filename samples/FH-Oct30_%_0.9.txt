@@ -1,0 +1,31 @@
+
+------------------------------------
+
+Sample Name: FH-Oct30_%_0.9
+
+Sample Composition:
+
+0.0525  Fe
+0.0031  S
+0.0444  O
+0.3924  B
+0.5076  N
+
+Absorption Coefficient (1/cm): 67.54
+Absorption Length (microns): 148.06
+
+Pellet Density (g/cm^3): 2.411
+Pellet Radius (cm): 0.65
+Pellet Volume (cm^3): 0.019642
+Pellet Mass (g): 0.047358
+
+Pellet Masses by Element (g): 
+
+0.0024863  Fe
+0.00014681  S
+0.0021027  O
+0.018583  B
+0.024039  N
+
+------------------------------------
+
