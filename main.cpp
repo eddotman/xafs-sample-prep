@@ -52,6 +52,7 @@ class Sample
 
     string get_name();
     int get_num_elements();
+    double get_energy();
 
     int set_name(string new_name);
     int set_energy(float inp_energy);
@@ -69,6 +70,11 @@ Sample::Sample(string sample_name)
 string Sample::get_name()
 {
     return name;
+}
+
+double Sample::get_energy()
+{
+    return energy;
 }
 
 int Sample::get_num_elements()
@@ -153,7 +159,7 @@ int Sample::write_file(string file_name)
 
     file_name = "samples/" + file_name + ".txt";
 
-    file.open(file_name.c_str());
+    file.open(file_name.c_str(), fstream::app);
 
     file << endl << "------------------------------------" << endl << endl;
     file << "Sample Name: " << name << endl << endl;
@@ -503,7 +509,9 @@ int parse_input(string mode = "none")
             if (sample_ID != NO_SAMPLES)
             {
                 err = samples[sample_ID].write_screen();
-                err = samples[sample_ID].write_file(samples[sample_ID].get_name());
+
+                string filename_temp = samples[sample_ID].get_name();
+                err = samples[sample_ID].write_file(filename_temp);
 
                 cout << "Sample has been saved to " << samples[sample_ID].get_name() << ".txt." << endl;
             }
